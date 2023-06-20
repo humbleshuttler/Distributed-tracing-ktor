@@ -21,11 +21,18 @@ val processingTimeMetrics: ObservableDoubleMeasurement =
         .setDescription("Request processing time")
         .setUnit("ms")
         .buildObserver()
+val requestCounter =
+    OpenTelemetry.getMeter()
+        .counterBuilder("requests")
+        .setDescription("Request count")
+        .setUnit("1")
+        .build()
 val getMethodAttribute: Attributes = Attributes.of(stringKey("Method"), "Get")
 
 fun Application.configureRouting() {
   routing {
     get("/") {
+      requestCounter.add(1, getMethodAttribute)
       val delay = random.nextDouble(500.0)
       logger.log(Level.INFO, "Processing time: $delay")
       processingTimeMetrics.record(delay, getMethodAttribute)
