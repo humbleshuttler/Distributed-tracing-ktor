@@ -15,11 +15,13 @@ application {
   mainClass.set("org.humbleshuttler.ApplicationKt")
 
   val isDevelopment: Boolean = project.ext.has("development")
+    val homeDir: String = System.getenv("HOME")
+
   applicationDefaultJvmArgs =
       listOf(
           "-Dio.ktor.development=$isDevelopment",
-          "-javaagent:/Users/humbleshuttler/Downloads/opentelemetry-javaagent.jar",
-          "-Dotel.exporter.otlp.endpoint=http://localhost:4317",
+          "-javaagent:$homeDir/Downloads/opentelemetry-javaagent.jar",
+          "-Dotel.exporter.otlp.endpoint=http://172.19.0.1:4317",
           "-Dotel.resource.attributes=service.name=Distributed-tracing-sample")
 }
 
